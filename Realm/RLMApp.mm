@@ -98,9 +98,9 @@ namespace {
     SyncClientConfig _clientConfig;
 }
 
-- (instancetype)init {
+- (instancetype)initWithEnableSessionMultiplexing:(BOOL)enableSessionMultiplexing
+                                     syncTimeouts:(nullable RLMSyncTimeoutOptions *)syncTimeouts {
     if (self = [super init]) {
-        self.enableSessionMultiplexing = true;
         self.encryptMetadata = !getenv("REALM_DISABLE_METADATA_ENCRYPTION") && !RLMIsRunningInPlayground();
         RLMNSStringToStdString(_clientConfig.base_file_path, RLMDefaultDirectoryForBundleIdentifier(nil));
         configureSyncConnectionParameters(_config);
@@ -124,7 +124,39 @@ namespace {
                    localAppName:(nullable NSString *)localAppName
                 localAppVersion:(nullable NSString *)localAppVersion
         defaultRequestTimeoutMS:(NSUInteger)defaultRequestTimeoutMS {
-    if (self = [self init]) {
+    return [self initWithBaseURL:baseURL
+                       transport:transport
+                    localAppName:localAppName
+                 localAppVersion:localAppVersion
+         defaultRequestTimeoutMS:defaultRequestTimeoutMS
+       enableSessionMultiplexing:true
+                    syncTimeouts:nil];
+}
+
+- (instancetype)initWithBaseURL:(nullable NSString *)baseURL
+                      transport:(nullable id<RLMNetworkTransport>)transport
+                   localAppName:(nullable NSString *)localAppName
+                localAppVersion:(nullable NSString *)localAppVersion
+      enableSessionMultiplexing:(BOOL)enableSessionMultiplexing
+                   syncTimeouts:(nullable RLMSyncTimeoutOptions *)syncTimeouts {
+    return [self initWithBaseURL:baseURL
+                       transport:transport
+                    localAppName:localAppName
+                 localAppVersion:localAppVersion
+         defaultRequestTimeoutMS:60000
+       enableSessionMultiplexing:enableSessionMultiplexing
+                    syncTimeouts:syncTimeouts];
+}
+
+- (instancetype)initWithBaseURL:(nullable NSString *)baseURL
+                      transport:(nullable id<RLMNetworkTransport>)transport
+                   localAppName:(nullable NSString *)localAppName
+                localAppVersion:(nullable NSString *)localAppVersion
+        defaultRequestTimeoutMS:(NSUInteger)defaultRequestTimeoutMS
+      enableSessionMultiplexing:(BOOL)enableSessionMultiplexing
+                   syncTimeouts:(nullable RLMSyncTimeoutOptions *)syncTimeouts {
+    if (self = [self initWithEnableSessionMultiplexing:enableSessionMultiplexing
+                                          syncTimeouts:syncTimeouts]) {
         self.baseURL = baseURL;
         self.transport = transport;
         self.localAppName = localAppName;
@@ -251,10 +283,6 @@ static void setOptionalString(std::optional<std::string>& dst, NSString *src) {
     return _clientConfig.multiplex_sessions;
 }
 
-- (void)setEnableSessionMultiplexing:(BOOL)enableSessionMultiplexing {
-    _clientConfig.multiplex_sessions = enableSessionMultiplexing;
-}
-
 - (BOOL)encryptMetadata {
     return _clientConfig.metadata_mode == SyncManager::MetadataMode::Encryption;
 }
@@ -274,10 +302,6 @@ static void setOptionalString(std::optional<std::string>& dst, NSString *src) {
 
 - (RLMSyncTimeoutOptions *)syncTimeouts {
     return [[RLMSyncTimeoutOptions alloc] initWithOptions:_clientConfig.timeouts];
-}
-
-- (void)setSyncTimeouts:(RLMSyncTimeoutOptions *)syncTimeouts {
-    _clientConfig.timeouts = syncTimeouts->_options;
 }
 
 @end

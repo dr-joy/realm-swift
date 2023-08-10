@@ -61,14 +61,14 @@ typedef void(^RLMOptionalErrorBlock)(NSError * _Nullable);
 /// closed when the last session is closed, and instead remains open for
 /// ``RLMSyncTimeoutOptions.connectionLingerTime`` milliseconds (30 seconds by
 /// default).
-@property (nonatomic, assign) BOOL enableSessionMultiplexing;
+@property (nonatomic, readonly) BOOL enableSessionMultiplexing;
 
 /**
  Options for the assorted types of connection timeouts for sync connections.
 
  If nil default values for all timeouts are used instead.
  */
-@property (nonatomic, nullable, copy) RLMSyncTimeoutOptions *syncTimeouts;
+@property (nonatomic, nullable, readonly, copy) RLMSyncTimeoutOptions *syncTimeouts;
 
 /**
 Create a new Realm App configuration.
@@ -97,6 +97,21 @@ Create a new Realm App configuration.
                    localAppName:(nullable NSString *)localAppName
                 localAppVersion:(nullable NSString *)localAppVersion
         defaultRequestTimeoutMS:(NSUInteger)defaultRequestTimeoutMS;
+
+- (instancetype)initWithBaseURL:(nullable NSString *)baseURL
+                      transport:(nullable id<RLMNetworkTransport>)transport
+                   localAppName:(nullable NSString *)localAppName
+                localAppVersion:(nullable NSString *)localAppVersion
+      enableSessionMultiplexing:(BOOL)enableSessionMultiplexing
+                   syncTimeouts:(nullable RLMSyncTimeoutOptions *)syncTimeouts;
+
+- (instancetype)initWithBaseURL:(nullable NSString *)baseURL
+                      transport:(nullable id<RLMNetworkTransport>)transport
+                   localAppName:(nullable NSString *)localAppName
+                localAppVersion:(nullable NSString *)localAppVersion
+        defaultRequestTimeoutMS:(NSUInteger)defaultRequestTimeoutMS
+      enableSessionMultiplexing:(BOOL)enableSessionMultiplexing
+                   syncTimeouts:(nullable RLMSyncTimeoutOptions *)syncTimeouts;
 
 @end
 

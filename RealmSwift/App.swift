@@ -48,7 +48,7 @@ public extension AppConfiguration {
                      localAppName: String? = nil, localAppVersion: String? = nil,
                      defaultRequestTimeoutMS: UInt? = nil, enableSessionMultiplexing: Bool? = nil,
                      syncTimeouts: SyncTimeoutOptions? = nil) {
-        self.init(baseURL: baseURL, transport: transport, localAppName: localAppName, localAppVersion: localAppVersion)
+        self.init(baseURL: baseURL, transport: transport, localAppName: localAppName, localAppVersion: localAppVersion, enableSessionMultiplexing: enableSessionMultiplexing ?? true, syncTimeouts: syncTimeouts)
         if let defaultRequestTimeoutMS {
             self.defaultRequestTimeoutMS = defaultRequestTimeoutMS
         }
