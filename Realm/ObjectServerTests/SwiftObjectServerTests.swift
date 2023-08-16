@@ -54,6 +54,19 @@ func assertSyncError(_ error: Error, _ code: SyncError.Code, _ message: String,
 @available(OSX 10.14, *)
 @objc(SwiftObjectServerTests)
 class SwiftObjectServerTests: SwiftSyncTestCase {
+    func testBasicAppConfiguration() {
+        let appConfig = AppConfiguration(baseURL: "http://localhost:5678",
+                                         transport: nil,
+                                         localAppName: nil,
+                                         localAppVersion: nil,
+                                         defaultRequestTimeoutMS: nil,
+                                         enableSessionMultiplexing: false,
+                                         syncTimeouts: .init(connectTimeout: 2000, connectionLingerTime: 1))
+        let app = App(id: appId, configuration: appConfig)
+        XCTAssertEqual(app.configuration.enableSessionMultiplexing, false)
+        XCTAssertEqual(app.configuration.syncTimeouts, .init(connectTimeout: 2000, connectionLingerTime: 1))
+    }
+    
     /// It should be possible to successfully open a Realm configured for sync.
     func testBasicSwiftSync() throws {
         let user = try logInUser(for: basicCredentials())

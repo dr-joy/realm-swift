@@ -153,6 +153,21 @@ namespace {
                    localAppName:(nullable NSString *)localAppName
                 localAppVersion:(nullable NSString *)localAppVersion
         defaultRequestTimeoutMS:(NSUInteger)defaultRequestTimeoutMS
+                   syncTimeouts:(nullable RLMSyncTimeoutOptions *)syncTimeouts {
+    return [self initWithBaseURL:baseURL
+                       transport:transport
+                    localAppName:localAppName
+                 localAppVersion:localAppVersion
+         defaultRequestTimeoutMS:defaultRequestTimeoutMS
+       enableSessionMultiplexing:true
+                    syncTimeouts:syncTimeouts];
+}
+
+- (instancetype)initWithBaseURL:(nullable NSString *)baseURL
+                      transport:(nullable id<RLMNetworkTransport>)transport
+                   localAppName:(nullable NSString *)localAppName
+                localAppVersion:(nullable NSString *)localAppVersion
+        defaultRequestTimeoutMS:(NSUInteger)defaultRequestTimeoutMS
       enableSessionMultiplexing:(BOOL)enableSessionMultiplexing
                    syncTimeouts:(nullable RLMSyncTimeoutOptions *)syncTimeouts {
     if (self = [self initWithEnableSessionMultiplexing:enableSessionMultiplexing

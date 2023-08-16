@@ -56,12 +56,6 @@ public extension AppConfiguration {
         if let defaultRequestTimeoutMS {
             self.defaultRequestTimeoutMS = defaultRequestTimeoutMS
         }
-        if let enableSessionMultiplexing {
-            self.enableSessionMultiplexing = enableSessionMultiplexing
-        }
-        if let syncTimeouts {
-            self.syncTimeouts = syncTimeouts
-        }
     }
 }
 
