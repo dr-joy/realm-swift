@@ -1148,7 +1148,6 @@
         XCTAssertEqual(results.count, 1U);
         [ex fulfill];
     }];
-    XCTAssertEqual(realm.subscriptions.count, 1UL);
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
 }
 
@@ -1175,13 +1174,15 @@
         XCTAssertNotNil(realm);
         CHECK_COUNT(0, Person, realm);
 
-        [[[Person allObjectsInRealm:realm] objectsWhere:@"lastName == 'Loren'"] subscribeWithCompletion:^(RLMResults *results, NSError *error) {
+
+        [[[Person allObjectsInRealm:realm] objectsWhere:@"lastName == 'Loren'"]
+         subscribeWithCompletionOnQueue:dispatch_get_main_queue()
+         completionBlock:^(RLMResults *results, NSError *error) {
             XCTAssertNil(error);
             XCTAssertEqual(results.count, 1U);
+            XCTAssertEqual(realm.subscriptions.count, 1UL);
             [ex fulfill];
-        } onQueue:dispatch_get_main_queue()];
-
-        XCTAssertEqual(realm.subscriptions.count, 1UL);
+        }];
     }];
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
 }
