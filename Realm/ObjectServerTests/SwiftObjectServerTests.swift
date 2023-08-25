@@ -47,8 +47,7 @@ func assertSyncError(_ error: Error, _ code: SyncError.Code, _ message: String,
     let e = error as NSError
     XCTAssertEqual(e.domain, RLMSyncErrorDomain, file: file, line: line)
     XCTAssertEqual(e.code, code.rawValue, file: file, line: line)
-    XCTAssertEqual(e.localizedDescription, "Unable to refresh the user access token.",
-                   file: file, line: line)
+    XCTAssertEqual(e.localizedDescription, message, file: file, line: line)
 }
 
 @available(OSX 10.14, *)
@@ -1701,7 +1700,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
         let blockCalled = Locked(false)
         let ex = expectation(description: "Error callback should fire upon receiving an error")
         app.syncManager.errorHandler = { @Sendable (error, _) in
-            assertSyncError(error, .clientUserError, "Unable to refresh the user access token.")
+            assertSyncError(error, .clientUserError, "Unable to refresh the user access token: signature is invalid")
             blockCalled.value = true
             ex.fulfill()
         }
@@ -1725,9 +1724,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
     // MARK: - App tests
 
     private func appConfig() -> AppConfiguration {
-        return AppConfiguration(baseURL: "http://localhost:9090",
-                                localAppName: "auth-integration-tests",
-                                localAppVersion: "20180301")
+        return AppConfiguration(baseURL: "http://localhost:9090")
     }
 
     func expectSuccess<T>(_ result: Result<T, Error>) -> T? {
@@ -1799,7 +1796,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
         let ex = expectation(description: "Error callback should fire upon receiving an error")
         ex.assertForOverFulfill = false // error handler can legally be called multiple times
         app.syncManager.errorHandler = { @Sendable (error, _) in
-            assertSyncError(error, .clientUserError, "Unable to refresh the user access token.")
+            assertSyncError(error, .clientUserError, "Unable to refresh the user access token: invalid session: failed to find refresh token")
             ex.fulfill()
         }
 

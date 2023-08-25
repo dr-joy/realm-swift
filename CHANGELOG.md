@@ -1,11 +1,22 @@
 x.y.z Release notes (yyyy-MM-dd)
 =============================================================
 ### Enhancements
-* None.
+* Add support for logging messages sent by the server.
+  ([Core #6476](https://github.com/realm/realm-core/pull/6476))
+* Unknown protocol errors received from the baas server will no longer cause
+  the application to crash if a valid error action is also received. Unknown
+  error actions will be treated as an ApplicationBug error action and will
+  cause sync to fail with an error via the sync error handler.
+  ([Core #6885](https://github.com/realm/realm-core/pull/6885))
+* Some sync error messages now contain more information about what went wrong.
 
 ### Fixed
-* <How to hit and notice issue? what was the impact?> ([#????](https://github.com/realm/realm-swift/issues/????), since v?.?.?)
-* None.
+* The `MultipleSyncAgents` exception from opening a synchronized Realm in
+  multiple processes at once no longer leaves the sync client in an invalid
+  state. ([Core #6868](https://github.com/realm/realm-core/pull/6868), since v10.36.0)
+* Testing the size of a collection of links against zero would sometimes fail
+  (sometimes = "difficult to explain"). In particular:
+  ([Core #6850](https://github.com/realm/realm-core/issues/6850), since v10.41.0)
 
 <!-- ### Breaking Changes - ONLY INCLUDE FOR NEW MAJOR version -->
 
@@ -39,6 +50,9 @@ x.y.z Release notes (yyyy-MM-dd)
 * Carthage release for Swift is built with Xcode 14.3.1.
 * CocoaPods: 1.10 or later.
 * Xcode: 14.1-15 beta 7.
+
+### Internal
+* Upgraded realm-core from 13.17.1 to 13.19.0
 
 10.42.0 Release notes (2023-07-30)
 =============================================================
